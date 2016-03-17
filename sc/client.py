@@ -93,8 +93,9 @@ class scClient(docker.Client):
 
         newContainer = super(scClient, self).create_container(
             image=image, command="/bin/sh", labels=label)
-        super(scClient, self).commit(container=newContainer, *args, **kwargs)
+        result = super(scClient, self).commit(container=newContainer, *args, **kwargs)
         super(scClient, self).remove_container(newContainer)
+        return result
 
     def fileCopyOut(self, containerid, filename, path):
         """Copy file from container to the local machine.
