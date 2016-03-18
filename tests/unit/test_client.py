@@ -127,10 +127,11 @@ def test_get_label_image(createClient, pull_docker_image):
 
 def test_get_label_image_utf8(createClient, pull_docker_image):
     """Get JSON label from imageID."""
-    myunicode = "Ý"
+    myunicode = u"Ý"
     myLabeldict = {"smartcontainer": {"code": myunicode}}
-    myLabel = json.loads(json.dumps(myLabeldict, ensure_ascii=True))
-    print myLabel
+    myLabelStr = json.dumps(myLabeldict, ensure_ascii=False).encode('utf8')
+    myLabel = json.loads(myLabelStr)
+    print myLabelStr
     imageID = createClient.put_label_image(image=pull_docker_image,
                                            label=myLabel)
     json_str = createClient.get_label_image(imageID=imageID)
