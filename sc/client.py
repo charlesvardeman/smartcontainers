@@ -91,6 +91,8 @@ class scClient(docker.Client):
         elif "fileobj" in kwargs and kwargs['fileobj'] != None:
             BP.processFO(kwargs['fileobj'])
 
+        Id = ""
+
         generator = None
         try:
             # Execute the build
@@ -99,8 +101,25 @@ class scClient(docker.Client):
             raise
         else:
             response = [line for line in generator]
+            final_line = response[len(response)-1]
 
-            print response
+            # Handle strange case of two lines in generated last line
+            lines = final_line.split("\r\n")
+            if len(lines) > 1:
+                if len(lines[0]) == 0:
+                    final_line = lines[1]
+                else:
+                    final_line = lines[0]
+
+            fJson = json.loads(final_line)
+            if "Successfully built" in fJson['stream']:
+                Id = fJson['stream'].split(' ')[2].strip()
+
+            for line in super(scClient, self).images():
+                fullID = line['Id'].replace("sha256:", "")
+                if fullID.startswith(Id):
+                    return fullID
+            return ""
         finally:
             if "fileobj" in kwargs:
                 kwargs["fileobj"].close()
@@ -248,9 +267,32 @@ class scClient(docker.Client):
         self.fileCopyIn(newContainer, self.provfilename, "/")
         # Remove local copy of provenance file
         os.remove(self.provfilename)
+
         # Commit the container changes
+        if 'path' in kwargs:
+            del kwargs['path']
+
+        tName = ""
+        if 'tag' in kwargs:
+            tName = kwargs['tag']
+            del kwargs['tag']
+
         newImage = super(scClient, self).commit(container=ContainerID, *args,
                                                 **kwargs)
+        # Update Tag
+        if tName is not "":
+            repository = ""
+            tag = ""
+
+            parts = tName.split(":")
+            repository = parts[0]
+            if len(parts) is 1:
+                tag = "latest"
+            else:
+                tag = parts[1]
+
+            super(scClient, self).tag(image=str(newImage['Id']).replace("sha256:", ""), repository=repository, tag=tag)
+
         # Stop container
         super(scClient, self).stop(ContainerID)
         super(scClient, self).remove_container(ContainerID)

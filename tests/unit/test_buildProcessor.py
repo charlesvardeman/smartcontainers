@@ -47,18 +47,6 @@ class BuildProcessorTestCase(unittest.TestCase):
         self.assertEqual(self.parsers[0].steps[0], "FROM ubuntu")
         self.assertEqual(self.parsers[1].steps[2], second_step)
 
-    def test_write_out_data(self):
-        self.parsers[0].write_out_data(os.path.join(base_dir,
-            "data/data1.json"))
-
-        self.parsers[1].write_out_data(os.path.join(base_dir,
-            "data/data2.json"))
-
-        self.assertTrue(os.path.isfile(os.path.join(base_dir,
-            "data/data1.json")))
-        self.assertTrue(os.path.isfile(os.path.join(base_dir,
-            "data/data2.json")))
-
     def test_parse_maintainer(self):
         second_maintainer = "Nicolas Reed <Nicolas.Reed.102 at nd dot edu>"
 
@@ -66,12 +54,12 @@ class BuildProcessorTestCase(unittest.TestCase):
         self.assertEqual(self.parsers[1].data["maintainer"], second_maintainer)
 
     def test_parse_run(self):
-        parameter_one = "install -y software-properties-common python"
+        parameter_one = "install -y software-properties-common python curl"
         parameter_two = "cp Schema\ 32/densities.csv "
         parameter_two += "Schema\ 32/autoRegressionParameters.csv "
         parameter_two += "Schema\ 32/scenario_32.xsd /om"
 
-        special_command = self.data_one["run"][0]["special"]
+        special_command = self.data_one["run"][1]["special"]
         self.assertIn("apt-get", special_command)
         self.assertEqual(special_command["apt-get"][0], parameter_one)
 
@@ -122,7 +110,7 @@ class BuildProcessorTestCase(unittest.TestCase):
         self.assertEqual(self.data_two["volume"][0], "/om/scenarios")
 
     def test_parse_user(self):
-        self.assertEqual(self.data_one["user"][0], "apache")
+        self.assertEqual(self.data_one["user"][0], "root")
 
     def test_parse_workdir(self):
         self.assertEqual(self.data_two["workdir"][0], "/om")

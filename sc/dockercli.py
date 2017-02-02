@@ -250,8 +250,10 @@ class DockerCli:
                     capture_flag = True
                     build_args = self.capture_cmd_build(cmd_string)
                     try:
-                        self.dcli.build(**build_args)
+                        default = self.dcli.build(**build_args)
+                        self.dcli.infect_image(default, **build_args)
                     except TypeError as error:
+                        print(error)
                         # Did not pass a path/fileobj.
                         # Run native docker build command
                         #  (probably a --help, or similar).
@@ -278,6 +280,7 @@ class DockerCli:
     option_mapping = {
         "quiet": "quiet",
         "q": "quiet",
+        "t": "tag",
         "no-cache": "nocache",
         "pull": "pull",
         "rm": "rm",
@@ -292,9 +295,10 @@ class DockerCli:
         "quiet": True,
         "nocache": True,
         "pull": True,
-        "forcerm": True,
+        "forcerm": False,
         "container_limits": {},
-        "rm": True
+        "rm": True,
+        "tag": "",
     }
     # Native docker to docker-py container limits.
     container_limits_mapping = {
@@ -355,7 +359,7 @@ class DockerCli:
                     continue
 
                 if option in short_options:
-                    data[option_value] = self.value_mapping[option_value]
+                    data[option_value] = a
                 elif option in long_options:
                     if type(self.value_mapping[option_value]) == dict:
                         if option_value not in data:
@@ -413,4 +417,4 @@ class DockerCli:
         Returns: TODO
 
         """
-        self.dcli.infect(image)
+        print("Result" + self.dcli.infect_image(image))
