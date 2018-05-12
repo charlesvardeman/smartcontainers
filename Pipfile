@@ -6,11 +6,13 @@ name = "pypi"
 [packages]
 click = "*"
 docker-py = "*"
+pytz = "*"
 
 [dev-packages]
 pytest = "*"
 pytest-capturelog = "*"
 pylint = "*"
+pyld = "*"
 
 [requires]
 python_version = "3.6"
