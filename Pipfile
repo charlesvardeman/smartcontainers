@@ -4,27 +4,7 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-alabaster = "*"
-Babel = "*"
 click = "*"
-colorama = "*"
-docutils = "*"
-"html5lib" = "*"
-isodate = "*"
-"Jinja2" = "*"
-MarkupSafe = "*"
-orcid = "*"
-pprintpp = "*"
-py = "*"
-Pygments = "*"
-pyparsing = "*"
-pytz = "*"
-rdflib = "*"
-rdflib-jsonld = "*"
-requests = "*"
-six = "*"
-snowballstemmer = "*"
-SPARQLWrapper = "*"
 docker-py = "*"
 
 [dev-packages]
