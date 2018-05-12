@@ -151,12 +151,12 @@ ds.add( ( UUIDNS[dockerUseruuid], FOAF.familyName, Literal("Vardeman II") ) )
 
 # Main function just prints the graph right now for testing:
 def main():
-    print "--- start: turtle ---"
-    print ds.serialize(format="turtle")
-    print "--- end: turtle ---\n"
-    print "-- start: json-ld ---"
-    print ds.serialize(format='json-ld', context=context, indent=4)
-    print "--- end: json-ld ---"
+    print("--- start: turtle ---")
+    print(ds.serialize(format="turtle", newline=True))
+    print("--- end: turtle ---")
+    print("-- start: json-ld ---")
+    print(ds.serialize(format='json-ld', context=context, indent=4))
+    print("--- end: json-ld ---")
 
 if __name__ == "__main__":
     main()
