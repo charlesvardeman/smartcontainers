@@ -1,18 +1,10 @@
 import click
 import os
-import rdflib
-from rdflib import Literal, Namespace
-from rdflib.namespace import FOAF
-import uuid
-from configmanager import ConfigManager
-from orcidmanager import OrcidManager
-from orcidprofilesearch import orcid_search
+
 from dockercli import DockerCli
 
 # from ._version import __version__
 
-# Set sandbox variable
-sandbox = True
 
 
 class Settings(object):
@@ -20,7 +12,6 @@ class Settings(object):
         self.home = os.path.abspath(home or '.')
         self.debug = debug
 
-graph = rdflib.Graph()
 config_file = ConfigManager()
 
 @click.group()
@@ -105,8 +96,8 @@ def docker(command):
     for i in range(len(command)):
         cmd += command[i] + " "
 
-    processdocker = DockerCli()
-    processdocker.do_command(cmd)
+    # processdocker = DockerCli()
+    # processdocker.do_command(cmd)
 
 
 @cli.command()
@@ -125,7 +116,7 @@ def printlabel(image):
     """Print Metadata label from container."""
     processdocker = DockerCli("info")
     this_label = processdocker.get_label(image)
-    print this_label
+    print(this_label)
 
 
 @cli.command()
@@ -140,7 +131,7 @@ def publish(image):
 
 @cli.command()
 def preserve():
-    """Preserve workflow to container using umbrella."""
+    """Preserve workflow to container."""
     pass
 
 @cli.command()
@@ -148,73 +139,10 @@ def preserve():
 def infect(image):
     """Provenance should be contagious. Create smartcontainer image from
     existing image. """
-    processdocker = DockerCli()
-    processdocker.infect(image)
-
-#  Orcid Commands  ################################
-#  cwilli34
-@config.command()
-@click.option('-i', default=None, help='Search for an Orcid profile by Orcid ID.')
-@click.option('-e', default=None, help='Search for an Orcid profile by email.')
-def orcid(i, e):
-    """Create a config file, based on an Orcid ID.
-
-    :param i: string
-        (Optional) Option to enter Orcid ID if known
-    :param e: string
-        (Optional) Option to enter Orcid email if known
-    """
-    # Make sure sandbox variable is set correctly in cli.py before testing
-    if i:
-        config_by_id(i)
-    elif e:
-        config_by_email(e)
-    elif i is None and e is None:
-        config_by_search()
-    else:
-        print('You have not selected a viable option.')
+    # processdocker = DockerCli()
+    # processdocker.infect(image)
 
 
-def config_by_search():
-    """Create a RDF Graph configuration file by searching for Orcid user."""
-    orcid_profile = orcid_search(sandbox=False)
-    if orcid_profile is not None:
-        orcid_manager = OrcidManager(sandbox=False, orcid_id=orcid_profile)
-        turtle_data = orcid_manager.get_turtle()
-        config_file = ConfigManager()
-        config_file.config_obj = turtle_data
-        config_file.write_config()
-    else:
-        print("Sorry, ORCID returned no resutls for that user information.")
-
-
-def config_by_id(orcid_id):
-    """Create a RDF Graph configuration file by Orcid ID.
-
-    :param orcid_id: string
-        Orcid ID used for the configuration file ID and to create the configuration file.
-    """
-    # Make sure sandbox variable is set correctly in cli.py before testing
-    orcid_profile = OrcidManager(orcid_id=orcid_id, sandbox=False)
-    turtle_data = orcid_profile.get_turtle()
-    config_file = ConfigManager()
-    config_file.get_config(_id=orcid_profile.orcid_id, _data=turtle_data)
-    config_file.write_config()
-
-
-def config_by_email(email):
-    """Create a RDF Graph configuration file by Orcid email.
-
-    :param email: string
-        Orcid email address used to create a configuration file.
-    """
-    # Make sure sandbox variable is set correctly in cli.py before testing
-    email = 'email:' + email
-    orcid_profile = OrcidManager(orcid_email=email, sandbox=False)
-    turtle_data = orcid_profile.get_turtle()
-    config_file = ConfigManager()
-    config_file.get_config(_id=orcid_profile.orcid_id, _data=turtle_data)
-    config_file.write_config()
 
 #  End Orcid  ###############################
 if __name__ == '__main__':

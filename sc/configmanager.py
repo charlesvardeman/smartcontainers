@@ -1,8 +1,8 @@
 """Configuration manager for reading and writing SC configuration files."""
 
-import simplejson as json
+import json
 import os
-import rdflib
+
 
 __author__ = 'cwilli34'
 
@@ -23,7 +23,7 @@ class ConfigManager(object):
         -------
         :returns: none
         """
-        self.graph = rdflib.Graph()
+        # self.graph = rdflib.Graph() --delete me
         self.filename = filename
 
         if os.environ.get('SC_HOME'):
@@ -53,7 +53,8 @@ class ConfigManager(object):
             ctgfile = open(self.config_path + self.filename, 'w')
 
         try:
-            ctgfile.write(str(self.config_obj))
+            # Write YAML file from config
+            # ctgfile.write(str(self.config_obj))
             # ctgfile.write(json.dumps(self.config_obj, indent=4, sort_keys=True))
             ctgfile.close()
             print('The configuration file has been created.')
@@ -87,7 +88,7 @@ class ConfigManager(object):
                 contents = ctgfile.read()
                 self.config_object = contents
                 ctgfile.close()
-                self.graph.parse(data=self.config_object, format='n3')
+                # self.graph.parse(data=self.config_object, format='n3')
                 return ''
             except:
                 ctgfile.close()
