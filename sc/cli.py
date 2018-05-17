@@ -1,7 +1,9 @@
 import click
 import os
+import sys
+from sc.configmanager import Config
 
-from dockercli import DockerCli
+# from dockercli import DockerCli
 
 # from ._version import __version__
 
@@ -12,7 +14,7 @@ class Settings(object):
         self.home = os.path.abspath(home or '.')
         self.debug = debug
 
-config_file = ConfigManager()
+config_file = Config()
 
 @click.group()
 @click.version_option()
@@ -28,49 +30,9 @@ def cli(ctx):
     image.
     """
 
-    # Ignore config loading if we intend to create an orcid config
-    if ctx.args[0] == "config" and ctx.args[1] == "orcid":
-        return
-
-    Success = False
-    while not Success:
-        result = config_file.read_config()
-        if 'Configuration does not exist.' in result:
-            print("User configuration needs to be initialized")
-            selected = None
-            while not selected:
-                try:
-                    selected = click.prompt('Do you have an ORCID profile (Y/N)')
-                    if selected.lower() == 'y' or selected.lower() == 'yes':
-                        config_by_search()
-                        continue
-
-                    if selected.lower() == 'n' or selected.lower() == 'no':
-                        print("Please provide some basic information:")
-                        query = {
-                            'first_name': click.prompt(
-                                'Please enter a first name', default='',
-                                show_default=False
-                            ),
-                            'last_name': click.prompt(
-                                'Please enter a last name', default='',
-                                show_default=False
-                            )
-                        }
-                        dockerUseruuid = str(uuid.uuid4())
-                        UUIDNS = Namespace("urn:uuid:")
-                        config_file.graph.bind("foaf", FOAF)
-                        config_file.graph.add( ( UUIDNS[dockerUseruuid], FOAF.givenName, Literal(query['first_name']) ) )
-                        config_file.graph.add( ( UUIDNS[dockerUseruuid], FOAF.familyName, Literal(query['last_name']) ) )
-
-                        config_file.config_obj = config_file.graph.serialize(format='turtle')
-                        config_file.write_config()
-                except KeyError:
-                    print('That is not a valid selection.  Please try again.\n')
-        else:
-            Success = True
-            graph = config_file.graph
-
+    # We require python 3.5 or greater now.
+    if sys.version_info < (3, 5):
+        sys.exit('sc requires Python 3.5+')
 
 @cli.group()
 @click.option('--config', '-c', help='Run configure command')
@@ -114,8 +76,8 @@ def search(image):
 @click.argument('image')
 def printlabel(image):
     """Print Metadata label from container."""
-    processdocker = DockerCli("info")
-    this_label = processdocker.get_label(image)
+    # processdocker = DockerCli("info")
+    # this_label = processdocker.get_label(image)
     print(this_label)
 
 

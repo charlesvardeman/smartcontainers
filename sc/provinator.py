@@ -29,8 +29,15 @@ context = {
   "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
   "prov": "http://www.w3.org/ns/prov#",
   "foaf": "http://xmlns.com/foaf/0.1/",
+  "schema": "http://schema.org/",
+  "frapo": "http://purl.org/cerif/frapo/",
   "agent": { "@type": "@id", "@id": "prov:Agent" },
   "person": {"@type": "@id", "@id": "prov:Person"},
+  "givenName": {"@id": "schema:givenName"},
+  "familyName": {"@id": "schema:familyName"},
+  "honorificSuffix": {"@id": "schema:honorificSuffix"},
+  "honorificPrefix": {"@id": "schema:honorificPreifx"},
+  "hasFamilialSuffix": {"@id": "frapo:hasFamilialSuffix"},
   "softwareAgent": { "@type": "@id", "@id": "prov:SoftwareAgent" },
   "actedOnBehalfOf": {"@type": "@id", "@id": "prov:actedOnBehalfOf"},
   "entity": { "@type": "@id", "@id": "prov:Entity" },
@@ -89,7 +96,11 @@ provAgent = []
 
 provAgent.append({
     '@id': chuck,
-    '@type': 'person'
+    '@type': 'person',
+    'givenName': 'Charles',
+    'familyName': 'Vardeman',
+    'honorificSuffix': 'PhD',
+    'hasFamilialSuffix': 'II'
 })
 
 provAgent.append({

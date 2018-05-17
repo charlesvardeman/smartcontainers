@@ -7,12 +7,16 @@ name = "pypi"
 click = "*"
 docker-py = "*"
 pytz = "*"
+"ruamel.yaml" = "*"
+py-cpuinfo = "*"
 
 [dev-packages]
 pytest = "*"
-pytest-capturelog = "*"
 pylint = "*"
 pyld = "*"
+pytest-bdd = "*"
+tox = "*"
+"e1839a8" = {path = ".", editable = true}
 
 [requires]
 python_version = "3.6"

@@ -14,10 +14,10 @@ import glob
 import json
 import re
 import os
-import scMetadata
+# import scMetadata
 import tempfile
 import tarfile
-import buildProcessor
+# import buildProcessor
 
 
 class scClient(docker.Client):
@@ -31,7 +31,7 @@ class scClient(docker.Client):
         super(scClient, self).__init__(*args, **kwargs)
 
         # Initialize variable and objects
-        self.scmd = scMetadata.scMetadata()
+        # self.scmd = scMetadata.scMetadata()
         self.provfilepath = "/SmartContainer/"
         self.provfilename = "SCProv.jsonld"
         self.label_prefix = "smartcontainer"

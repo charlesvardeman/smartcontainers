@@ -9,7 +9,7 @@ docker command line arguments even though only a subset of these commands need
 to be processed for provenance.
 """
 from __future__ import unicode_literals
-from util import which
+from sc.util import which
 import getopt
 import os
 import os.path
@@ -19,7 +19,7 @@ import subprocess
 
 import docker.tls as tls
 
-import client
+import sc.client
 
 # We need to docker version greater than 1.6.0 to support
 # the label functionality.
@@ -179,9 +179,9 @@ class DockerCli:
                                    stderr=subprocess.PIPE)
             output, error = res.communicate()
         except OSError as e:
-            print "OSError > ", e.errno
-            print "OSError > ", e.strerror
-            print "OSError > ", e.filename
+            print("OSError > ", e.errno)
+            print("OSError > ", e.strerror)
+            print("OSError > ", e.filename)
         #
         # This checks if we can get a connection to the remote docker
         # server. It assumes the output of the "docker images"" command is
@@ -210,9 +210,9 @@ class DockerCli:
                                    stderr=subprocess.PIPE)
             output, error = res.communicate()
         except OSError as e:
-            print "OSError > ", e.errno
-            print "OSError > ", e.strerror
-            print "OSError > ", e.filename
+            print("OSError > ", e.errno)
+            print("OSError > ", e.strerror)
+            print("OSError > ", e.filename)
         # in docker 1.7.1 version is at 2 position in returned string
         version = output.split()[2]
         # remove comma from out put if in string
@@ -273,7 +273,7 @@ class DockerCli:
         Returns: TODO
 
         """
-        print cmd_string
+        print(cmd_string)
         pass
 
     # Native docker to docker-py options.
@@ -336,7 +336,7 @@ class DockerCli:
             opts, args = getopt.gnu_getopt(command_arguments, short_options,
                                            long_options)
         except getopt.GetoptError as error:
-            print str(error)
+            print(str(error))
             raise error
 
         short_options = self.arg_short_options + self.no_arg_short_options
